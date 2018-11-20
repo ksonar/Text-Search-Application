@@ -1,5 +1,7 @@
 package InvertedIndex;
-
+/*
+ * @author ksonar
+ */
 public class Data implements Comparable{
 	private Data data;
 	private int frequency;
@@ -12,6 +14,10 @@ public class Data implements Comparable{
 	}
 	
 	public int getFrequency() { return frequency; }
+	@Override
+	public String toString() {
+		return data + ", frequency : " + frequency;
+	}
 	
 	/*
 	 * Sorts MetaData objects in descending order

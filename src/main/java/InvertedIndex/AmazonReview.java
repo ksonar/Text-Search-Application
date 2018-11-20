@@ -1,7 +1,9 @@
 package InvertedIndex;
 
 import java.util.ArrayList;
-
+/*
+ * @author ksonar
+ */
 public class AmazonReview extends Data{
 		private String reviewerID;
 		private String asin;
@@ -16,7 +18,7 @@ public class AmazonReview extends Data{
 		@Override
 		public String toString() {
 			//return "reviewID : " + reviewerID + "\tunixReviewTime : " + unixReviewTime;
-			return "{\"reviewerID\" : \"" + reviewerID + "\",\"asin\" : \"" + asin + "\",\"reviewerName\" : \"" + reviewerName + "\",\"helpful\" : " + helpful + ",\"reviewText\" : \"" + reviewText + "\",\"overall\" : " + overall + ",\"summary\" : \"" + summary + "\",\"unixReviewTime\" : " + unixReviewTime + ",\"reviewTime\" : \"" + reviewTime + "\"}";
+			return "reviewerID : " + reviewerID + ",asin : " + asin + ",reviewerName : " + reviewerName + ",helpful : " + helpful + ",reviewText : " + reviewText + ",overall : " + overall + ",summary : " + summary + ",unixReviewTime : " + unixReviewTime + ",reviewTime : " + reviewTime;
 		}
 		
 		public Double getUnixReviewTime() { return unixReviewTime; }

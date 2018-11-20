@@ -1,4 +1,4 @@
-package PubSub;
+package InvertedIndex;
 
 import java.io.IOException;
 import java.util.logging.ConsoleHandler;
@@ -12,12 +12,15 @@ import java.util.logging.SimpleFormatter;
  * Create a single instance of the logger that needs to be used across all Java classes to create a single log file for the application
  * @author ksonar
  */
-
 public class LogData {
 	public static Logger log = null;
 	
-	public static void createLogger() throws SecurityException, IOException {
-		buildLogger();
+	public static void createLogger() {
+		try {
+			buildLogger();
+		} catch (SecurityException | IOException e) {
+			System.out.println("UNABLE TO CREATE LOGGER");
+		}
 	}
 	
 	private static void buildLogger() throws SecurityException, IOException {

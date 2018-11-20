@@ -4,60 +4,46 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
+/*
+ * @author ksonar
+ * Builds InvertedIndex, row data received from respective subscribers
+ */
 public class InvertedIndex {
 	private HashMap<String, Integer> mapCount = new HashMap<String, Integer>();
 	private HashMap<String, ArrayList<Data>> wordIndex = new HashMap<>();
 	private String fullText;
 	private String[] split;
 
-	
-	public void addData(Data d) {
-		if ( d instanceof AmazonReview) {
-			fullText = ((AmazonReview) d).getReviewText();
+	/*
+	 * Adds all required text from row data into InvertedIndex
+	 * @params data
+	 */
+	public void addData(Data data) {
+		if ( data instanceof AmazonReview) {
+			fullText = ((AmazonReview) data).getReviewText();
 		}
 		else {
-			fullText = ((AmazonQA) d).getQuestion() + " " + ((AmazonQA) d).getAnswer();
+			fullText = ((AmazonQA) data).getQuestion() + " " + ((AmazonQA) data).getAnswer();
 		}
 		splitAndRegex(fullText);
-		update(d);
-		//System.out.println("Updated with a new review");
-		
+		update(data);		
 	}
-	
+	//getSize
 	public int wordIndexSize() { return wordIndex.size(); }
-	public String wordIndexHead(int size) { 
-		String head = ""; int count = 0;
-		for(String term : wordIndex.keySet()) {
-			if (count < size) {
-				head += term +'\t';
-				count++;
-			}
-			else {
-				break;
-			}
-			
-		}
-		return head;
-	}
-	
+		
 	/*
 	 * Splits text data and removes all non-alphanumeric data	
 	 * @param fullText
 	 */
-	
 	public void splitAndRegex (String fullText) {
-		//System.out.println(fullText);
 		split = fullText.replaceAll("[^A-Za-z0-9 ]", "").toLowerCase().split("\\s+");
-		
 	}
 	
 	/*
-	 * Update the wordIndex with a MetaData object which contains a Data object and frequency of a particular word.
-	 * @param a
+	 * Update the wordIndex row data and frequency of a particular word.
+	 * @param data
 	 */
-	
-	public void update (Data a) {
+	public void update (Data data) {
 		int count = 0;
 		Data obj;
 		
@@ -70,8 +56,7 @@ public class InvertedIndex {
 			else {
 				hh.put(word, 1);	
 				count = mapCount.get(word); //get count of a specific word
-				obj = new Data(a, count); //create new instance of MetaData object
-
+				obj = new Data(data, count); //create new instance of Data object
 				if(wordIndex.get(word) != null) {
 					wordIndex.get(word).add(obj);
 				}
@@ -97,16 +82,29 @@ public class InvertedIndex {
 		}
 	}
 	
-	public void displayCount() {
+	/*
+	 * Searches and displays all objects that contain a particular word/term with full match.
+	 * @param term
+	 */
+	public void search (String term) {
+		Boolean check = false;
+		int count = 1;
 		for(Map.Entry<String, ArrayList<Data>> item : wordIndex.entrySet()) {
-			System.out.println(item.getKey() + ":\t" + item.getValue().size());
+			if(item.getKey().equals(term)) {
+				check = true;
+				for(Data d : item.getValue()) {
+					System.out.println(count + "." + d.toString() + "\n");
+					count++;
+				}
+			}
 		}
+		if(check == false)
+			System.out.println("Data for key does not exist");
 	}
 	
 	/*
 	 * Sort all values within a key of wordIndex by countOfWord. Method is called after all JSON objects are read and mapped.
 	 */
-
 	public void sortWordIndex() {
 		for(Map.Entry<String, ArrayList<Data>> item : wordIndex.entrySet()) {
 			Collections.sort(item.getValue());

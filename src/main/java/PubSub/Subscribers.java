@@ -20,25 +20,19 @@ public class Subscribers<T> implements Subscriber<T> {
 	private Data jsonData = new Data();
 	private volatile int counter = 0;
 	private Data type;
-	private int countEqual = 0;
-	private int count = 0;
 	private int count1 = 0;
 	private String fName;
 	private BufferedWriter write;
 	public ArrayList<Data> subData = new ArrayList<>();
-	private InvertedIndex aa = new InvertedIndex();
+	private InvertedIndex invertedIndex = new InvertedIndex();
 
-	private Broker<T> broker;
-	
 	public String getName() { return fName; }
 	
 	public int getCount1() { return count1;}
 	
-	public int getCount() { return count; }
+	public String getFName() { return fName; }
 	
-	public int getEqualCount() { return countEqual; }
-	
-	
+	public InvertedIndex getInvertedIndex() { return invertedIndex; } 
 	/*
 	 * Subscriber constructor that will initialize and subscribe itself to the broker
 	 * @params broker, fName, unixTime
@@ -46,7 +40,6 @@ public class Subscribers<T> implements Subscriber<T> {
 	public Subscribers(Broker<T> broker, String fName, Data type) {
 		this.fName = fName;
 		this.type = type;
-		this.broker = broker;
 		setup();
 		System.out.println("SUBSCRIBER ADDED : " + fName);
 		broker.subscribe(this);
@@ -54,8 +47,8 @@ public class Subscribers<T> implements Subscriber<T> {
 	}
 	
 	public void displayStats() {
-		System.out.println(fName + " HashMap : " + aa.wordIndexSize() + "\nHead : " + aa.wordIndexHead(5));
-	}
+		System.out.println(fName + " HashMap : " + invertedIndex.wordIndexSize());
+		}
 	
 	/*
 	 * Close subscriber file
@@ -90,16 +83,16 @@ public class Subscribers<T> implements Subscriber<T> {
 	 */
 	@Override
 	public synchronized void onEvent(T item) {
-		jsonData = (Data) item;
+		//jsonData = (Data) item;
 		if(item.getClass().equals(type.getClass())) {
-			/*
+			
 			if(fName.equals("AmazonReview")) {
 				jsonData = (AmazonReview) item;
 			}
 			else if (fName.equals("AmazonQA")){
 				jsonData = (AmazonQA) item;
 			}
-			*/
+			
 			/*
 			try {
 				write.write(jsonData.toString());
@@ -107,7 +100,7 @@ public class Subscribers<T> implements Subscriber<T> {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}*/
-			aa.addData(jsonData);
+			invertedIndex.addData(jsonData);
 			
 			//subData.add(jsonData);
 			count1++;

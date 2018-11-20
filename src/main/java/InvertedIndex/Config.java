@@ -10,7 +10,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
-
+/*
+ * @author ksonar
+ * Read data from config file for setting up PubSub model
+ */
 public class Config {
 	public static Config configData;
 	private ArrayList<String> pubFiles;
@@ -32,16 +35,16 @@ public class Config {
 		BufferedReader f = Files.newBufferedReader(Paths.get(file));
 		configData = gson.fromJson(f, Config.class);
 		System.out.println(configData.toString() + '\n');
-		//LogData.log.info(configData.toString());
+		LogData.log.info(configData.toString());
 		}
 		catch (IOException | NullPointerException i) {
-			//LogData.log.warning("NO SUCH FILE");
+			LogData.log.warning("NO SUCH FILE");
 			System.out.println("NO SUCH FILE");
 			System.exit(1);
 		}
 		catch (JsonSyntaxException i) {
 			System.out.println("JSON");
-			//LogData.log.warning("NO SUCH FILE");
+			LogData.log.warning("NO SUCH FILE");
 		}		
 	return configData;
 	}

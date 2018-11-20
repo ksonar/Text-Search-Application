@@ -1,6 +1,6 @@
 package PubSub;
 
-
+import InvertedIndex.LogData;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

@@ -1,5 +1,7 @@
 package PubSub;
 import InvertedIndex.*;
+import InvertedIndex.Config;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,27 +17,24 @@ import com.google.gson.JsonSyntaxException;
  * Class to read from config file and setup all resources for the Pub-Sub framework
  * @author ksonar
  */
-
 public class Setup<T> {
 	private HashMap<String, Data> dataTypes = new HashMap<>();
 	private String cFile;
 	public static Config configData;
-	private Class<T> type;
 	private ArrayList<Publisher<T>> publishers = new ArrayList<>();
 	private ArrayList<Subscribers<T>> subscribers = new ArrayList<>();
 	private Broker<T> broker;
-	
 	private ArrayList<Thread> publisherThreads = new ArrayList<>();
 	private Thread brokerThread = new Thread();
-	
 	private long sTime, eTime;
-	
+	//getSubscriberList
 	public ArrayList<Subscribers<T>> getSubs() { return subscribers; }
+	
 	/*
 	 * Display count of old, new and equal. Also display count of total items received 
 	 */
 	public void displayCount() {
-		for(Subscribers sub : subscribers) {
+		for(Subscribers<T> sub : subscribers) {
 			System.out.println(sub.getName() + " : " + sub.getCount1());
 			sub.displayStats();
 		}
@@ -50,7 +49,6 @@ public class Setup<T> {
 	public Setup(String cFile, Class<T> type) throws IOException {
 		LogData.createLogger();
 		this.cFile = cFile;
-		this.type = type;
 		setMap();
 		read();
 		build();
@@ -70,15 +68,15 @@ public class Setup<T> {
 		BufferedReader f = Files.newBufferedReader(Paths.get(cFile));
 		configData = gson.fromJson(f, Config.class);
 		System.out.println("HHHH : " + configData.toString() + '\n');
-		//LogData.log.info(configData.toString());
+		LogData.log.info(configData.toString());
 		}
 		catch (IOException | NullPointerException i) {
-			//LogData.log.warning("NO SUCH FILE");
+			LogData.log.warning("NO SUCH FILE");
 			System.out.println("NO SUCH FILE");
 			System.exit(1);
 		}
 		catch (JsonSyntaxException i) {
-			//LogData.log.warning("NO SUCH FILE");
+			LogData.log.warning("NO SUCH FILE");
 		}		
 	}
 	
@@ -98,12 +96,12 @@ public class Setup<T> {
 		sTime = System.currentTimeMillis();
 		for(Thread t : publisherThreads) {
 			t.start();
-			//LogData.log.info("PUB THREAD STARTED : " + t);
+			LogData.log.info("PUB THREAD STARTED : " + t);
 		}
 		
 		if((configData.type().equals("AsyncOrdered"))) {
 			brokerThread.start();
-			//LogData.log.info("ASYNCORDERED BROKER THREAD STARTED : " + brokerThread);
+			LogData.log.info("ASYNCORDERED BROKER THREAD STARTED : " + brokerThread);
 		}
 		
 	}
@@ -115,11 +113,11 @@ public class Setup<T> {
 		for(Thread t : publisherThreads) {
 			try {
 				t.join();
-				//LogData.log.info("PUB THREAD JOINED : " + t);
+				LogData.log.info("PUB THREAD JOINED : " + t);
 				eTime = System.currentTimeMillis();
-				//LogData.log.info("PUB EXEC TIME : "+ (eTime-sTime)/1000.0);
+				LogData.log.info("PUB EXEC TIME : "+ (eTime-sTime)/1000.0);
 			} catch (InterruptedException e) {
-				//LogData.log.warning("THREAD JOIN ERROR");
+				LogData.log.warning("THREAD JOIN ERROR");
 			}
 		}
 		broker.shutdown();
@@ -127,15 +125,15 @@ public class Setup<T> {
 		if((configData.type().equals("AsyncOrdered"))) {
 			try {
 				brokerThread.join();
-				//LogData.log.info("ASYNCORDERD THREAD JOINED : " + brokerThread);
+				LogData.log.info("ASYNCORDERD THREAD JOINED : " + brokerThread);
 			} catch (InterruptedException e) {
-				//LogData.log.warning("ASYNCORDERED BROKER THREAD JOIN ERROR");
+				LogData.log.warning("ASYNCORDERED BROKER THREAD JOIN ERROR");
 			}
 		}
 		for(Subscribers<T> s : subscribers) {
 			s.close();
 		}
-		//LogData.log.info("CLOSED SUBSCRIBER FILES");
+		LogData.log.info("CLOSED SUBSCRIBER FILES");
 	}
 	
 	/*
@@ -163,7 +161,6 @@ public class Setup<T> {
 	 * Set Publishers and its threads
 	 */
 	public void setPub() {
-		//Arraylist
 		for(int i = 0; i < configData.pubs().size(); i++) {
 			String pubFile = configData.pubs().get(i);
 			String pubType = configData.getPubTypes().get(i);
@@ -173,16 +170,6 @@ public class Setup<T> {
 		for(Publisher<T> p : publishers) {
 			publisherThreads.add(new Thread(p));
 		}
-		/*
-		for(String fName : configData.pubs()) {
-			publishers.add(new Publisher<T>(fName, type, broker));
-		}
-		LogData.log.info("#Pubs : " + publishers.size());
-		for(Publisher<T> p : publishers) {
-			publisherThreads.add(new Thread(p));
-		}
-		LogData.log.info("#PubThreads : " + publisherThreads.size());
-		*/
 	}
 	
 	/*
@@ -192,7 +179,25 @@ public class Setup<T> {
 		for(String fName : configData.subs()) {
 			subscribers.add(new Subscribers<T>(broker, fName, dataTypes.get(fName)));
 		}
-		//LogData.log.info("#Subs : " + subscribers.size());
+		LogData.log.info("#Subs : " + subscribers.size());
 		
 	}
+	
+	/*
+	 * Return a hashmap of name and corresponding invertedindex of each subscriber
+	 */
+	public HashMap<String, InvertedIndex> getSubInvertedIndex() {
+		HashMap<String, InvertedIndex> ii = new HashMap<>();
+		for(Subscribers<T> sub : subscribers) {
+			if(ii.containsKey(sub.getFName())) {
+				continue;
+			}
+			else {
+				ii.put(sub.getFName(), sub.getInvertedIndex());
+			}
+		}
+		
+		return ii;
+	}
+
 }
