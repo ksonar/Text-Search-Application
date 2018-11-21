@@ -12,7 +12,7 @@ import PubSub.*;
 public class Start {
 	public static ArrayList<InvertedIndex> ii = new ArrayList<>();
 	public static void main(String[] args) {
-		LogData.createLogger();
+		//LogData.createLogger();
 		QueryInvertedIndex queryObj;
 		System.out.println("HELLO");
 

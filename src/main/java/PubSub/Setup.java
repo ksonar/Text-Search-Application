@@ -33,12 +33,13 @@ public class Setup<T> {
 	/*
 	 * Display count of old, new and equal. Also display count of total items received 
 	 */
-	public void displayCount() {
+	public HashMap<String, Integer> displayCount() {
+		HashMap<String, Integer> countMap = new HashMap<>();
 		for(Subscribers<T> sub : subscribers) {
-			System.out.println(sub.getName() + " : " + sub.getCount1());
-			sub.displayStats();
+			countMap.put(sub.getFName() + " Count", sub.getCount1());
+			countMap.put(sub.getFName() + " InvertedIndex", sub.getSize());
 		}
-		LogData.log.info("\n\nDONE\n~~~~~~~");
+		return countMap;
 	}
 	
 	
@@ -66,17 +67,19 @@ public class Setup<T> {
 		Gson gson = new GsonBuilder().create();
 		try {
 		BufferedReader f = Files.newBufferedReader(Paths.get(cFile));
-		configData = gson.fromJson(f, Config.class);
-		System.out.println("HHHH : " + configData.toString() + '\n');
+		configData = gson.fromJson(f,  Config.class);
+
+		//configData = gson.fromJson(cFile, Config.class);
 		LogData.log.info(configData.toString());
 		}
-		catch (IOException | NullPointerException i) {
+		
+		catch (IOException i) {
 			LogData.log.warning("NO SUCH FILE");
 			System.out.println("NO SUCH FILE");
 			System.exit(1);
 		}
 		catch (JsonSyntaxException i) {
-			LogData.log.warning("NO SUCH FILE");
+			LogData.log.warning("JSON ERROR");
 		}		
 	}
 	
@@ -164,7 +167,7 @@ public class Setup<T> {
 		for(int i = 0; i < configData.pubs().size(); i++) {
 			String pubFile = configData.pubs().get(i);
 			String pubType = configData.getPubTypes().get(i);
-			System.out.println("FILE : " + pubFile + " TYPE : " + pubType);
+			LogData.log.info("PUB FILE : " + pubFile + " TYPE : " + pubType);
 			publishers.add(new Publisher<T>(pubFile, pubType, broker));
 		}
 		for(Publisher<T> p : publishers) {
@@ -196,7 +199,6 @@ public class Setup<T> {
 				ii.put(sub.getFName(), sub.getInvertedIndex());
 			}
 		}
-		
 		return ii;
 	}
 

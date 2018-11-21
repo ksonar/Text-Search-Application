@@ -28,7 +28,7 @@ public class Config {
 		return pubFiles + "\t" + pubTypes + "\t" + subInvertedIndex + "\t" + brokerType + '\t' + poolSize + '\t' + queueSize;
 		
 	}
-	
+	/*
 	public static Config readConfig(String file) {
 		Gson gson = new GsonBuilder().create();
 		try {
@@ -48,6 +48,7 @@ public class Config {
 		}		
 	return configData;
 	}
+	*/
 	
 	//getters
 	public ArrayList<String> pubs() { return pubFiles; }

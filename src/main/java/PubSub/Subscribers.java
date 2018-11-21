@@ -1,8 +1,4 @@
 package PubSub;
-import org.json.simple.JSONObject;
-
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import InvertedIndex.*;
 import java.io.BufferedWriter;
@@ -18,19 +14,18 @@ import java.util.ArrayList;
 
 public class Subscribers<T> implements Subscriber<T> {
 	private Data jsonData = new Data();
-	private volatile int counter = 0;
 	private Data type;
 	private int count1 = 0;
 	private String fName;
 	private BufferedWriter write;
 	public ArrayList<Data> subData = new ArrayList<>();
 	private InvertedIndex invertedIndex = new InvertedIndex();
-
-	public String getName() { return fName; }
 	
 	public int getCount1() { return count1;}
 	
 	public String getFName() { return fName; }
+	
+	public int getSize() { return invertedIndex.wordIndexSize(); }
 	
 	public InvertedIndex getInvertedIndex() { return invertedIndex; } 
 	/*
@@ -41,14 +36,9 @@ public class Subscribers<T> implements Subscriber<T> {
 		this.fName = fName;
 		this.type = type;
 		setup();
-		System.out.println("SUBSCRIBER ADDED : " + fName);
 		broker.subscribe(this);
-		//LogData.log.info("SUBSCRIBER ADDED");
+		LogData.log.info("SUBSCRIBER ADDED");
 	}
-	
-	public void displayStats() {
-		System.out.println(fName + " HashMap : " + invertedIndex.wordIndexSize());
-		}
 	
 	/*
 	 * Close subscriber file
@@ -101,15 +91,8 @@ public class Subscribers<T> implements Subscriber<T> {
 				e.printStackTrace();
 			}*/
 			invertedIndex.addData(jsonData);
-			
-			//subData.add(jsonData);
-			count1++;
-			if(counter < 10) {
-				System.out.println("```Data from " + fName + "\n" + jsonData + "\n```");
-				counter++;
-			}
 
-			
+			count1++;			
 		}
 
 	}

@@ -41,20 +41,17 @@ public class Publisher<T> implements Runnable {
 	public void run() {
 		int count = 0;
 		long sTime = System.currentTimeMillis();
-		
 		try (BufferedReader f = Files.newBufferedReader(Paths.get(fName), StandardCharsets.ISO_8859_1)) {
-			while((line = f.readLine()) != null ) {
+			while((line = f.readLine()) != null && count < 10000) {
 				if(type.equals("AmazonReview")) {
 					item = (T) gson.fromJson(line,AmazonReview.class);
 				}
 				else {
 					item = (T) gson.fromJson(line,AmazonQA.class);
 				}
-				//System.out.println(item);
 				broker.publish(item);
 				count++;
 			}
-		LogData.log.info("DONE READING AND PUBLISHING : " + count);
 		}
 		catch (NoSuchFileException i){
 			LogData.log.warning("MESSAGE : NO SUCH FILE!");
@@ -66,7 +63,7 @@ public class Publisher<T> implements Runnable {
 			LogData.log.warning("MESSAGE : IO ERROR!");
 		} 
 		long eTime = System.currentTimeMillis();
-		System.out.println("COUNT : " + count + "\tTIME PUB : " + (eTime-sTime)/1000.0 + '\n');
+		LogData.log.info("DONE WITH A PUBLISHER, COUNT : " + count + "\tTIME PUB : " + (eTime-sTime)/1000.0 + '\n');
 		}
 	}
 	
