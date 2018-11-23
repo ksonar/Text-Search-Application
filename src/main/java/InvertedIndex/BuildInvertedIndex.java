@@ -8,20 +8,18 @@ import PubSub.Setup;
 import PubSub.Subscribers;
 
 public class BuildInvertedIndex {
-	private QueryInvertedIndex queryObj;
+	public static QueryInvertedIndex queryObj;
 	private Setup<Data> setup;
 	private double time;
 	private HashMap<String, Integer> countMap = new HashMap<>();
 	
 	public HashMap<String, Integer> getCountMap() { return countMap; }
 	public String getTime() { return time + "secs"; }
-	public ArrayList<String> getNames() { 
-		ArrayList<String> names = new ArrayList<>();
-		for (Subscribers<Data> sub : setup.getSubs()) {
-			names.add(sub.getFName());
-		}
-		return names;
-	}
+	
+	public ArrayList<String> getSubNames() { return Setup.configData.subs(); }
+	public ArrayList<String> getPubNames() { return Setup.configData.pubs(); }
+
+	
 	
 	public void buildInvertedIndex(String cFile) {
 		LogData.log.info("BUILDING INVERTED INDEX from " + cFile);

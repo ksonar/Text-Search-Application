@@ -1,0 +1,15 @@
+<html>
+<title>Query</title>
+<body>
+	<h1>YOU CAN NOW QUERY!!</h1>
+	<form action = "/InvertedIndexAPI/SimpleQuery" method = "post">
+	<select name = "query">
+		<option value = "reviewsearch">Search in Reviews</option>
+		<option value = "qasearch">Search in QAs</option>
+	</select>
+	<input type="hidden" name="build" value="true" >
+	<input type="text" name="param" value="" required=true><br>
+	<input type = "submit" value = "Submit" <br/>
+</form>
+</body>
+</html>

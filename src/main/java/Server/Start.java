@@ -13,8 +13,9 @@ public class Start {
 		server.setHandler(handler);
 		
 		handler.addServletWithMapping(LandingPage.class, "");
-		handler.addServletWithMapping(LandingPage.class, "/xyz");
 		handler.addServletWithMapping(InvertedIndexAPI.class, "/InvertedIndexAPI");
+		handler.addServletWithMapping(SimpleQuery.class, "/InvertedIndexAPI/SimpleQuery");
+		handler.addServletWithMapping(Stats.class, "/InvertedIndexAPI/Stats");
 		//handler.addServletWithMapping((Class<? extends Servlet>) InvertedIndexAPI.class, "/InvertedIndex");
 		server.start();
 		LogData.log.info("MAPPING DONE, SERVER STARTED");

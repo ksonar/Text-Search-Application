@@ -20,45 +20,43 @@ public class InvertedIndexAPI extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	private String landingPage = "InvertedIndex.html";
 	private String builtPage = "BuiltInvertedIndex.html";
+	private String queryPage = "QueryType.html";
+	private String queryResult = "QueryResult.html";
 	private String config = "config.json";
 	private boolean build = false;
-	private HashMap<String, Integer> mapCount;
-	private String time;
-	private ArrayList<String> subs;
 	private JSONObject obj = new JSONObject();
+	public static BuildInvertedIndex invertedIndex;
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		LogData.log.info("GET : " + getServletName());
+		PrintWriter out = response.getWriter();
 		response.setContentType("text/html");
 		response.setStatus(HttpServletResponse.SC_OK);
-		PrintWriter out = response.getWriter();
-		
-		out.println(ReadPage.readPage(landingPage));
-		
+		if(build) {
+			LogData.log.info("GET : " + getServletName() + " : " + queryPage);
+			out.println(ReadPage.readPage(queryPage));
+		}
+		else {
+			LogData.log.info("GET : " + getServletName() + " : " + landingPage);
+			out.println(ReadPage.readPage(landingPage));
+		}		
 	}
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		if(build) {
-			
+		PrintWriter out = response.getWriter();
+		response.setContentType("text/html");
+		response.setStatus(HttpServletResponse.SC_OK);
+		
+		String[] q = request.getParameterValues("data");
+		
+		//String q = request.getParameter("userInput");
+		if(q != null) {
+			invertedIndex = new BuildInvertedIndex();
+			buildJSON(q);
+			invertedIndex.buildInvertedIndex(config);
+			out.println(ReadPage.readAndBuildPage(builtPage, invertedIndex));
 		}
-		else {
-			response.setContentType("text/html");
-			response.setStatus(HttpServletResponse.SC_OK);
-			
-			PrintWriter out = response.getWriter();
-			String[] q = request.getParameterValues("data");
-			//String q = request.getParameter("userInput");
-			if(q != null) {
-				BuildInvertedIndex invertedIndex = new BuildInvertedIndex();
-				buildJSON(q);
-				invertedIndex.buildInvertedIndex(config);
-				mapCount = invertedIndex.getCountMap();
-				time = invertedIndex.getTime();
-				subs = invertedIndex.getNames();
-				
-			}
-			out.println(ReadPage.readPage(builtPage, mapCount, time, subs));
-		}
+		build = true;
+
 
 	}
 	
@@ -91,7 +89,6 @@ public class InvertedIndexAPI extends HttpServlet{
 		obj.put("brokerType" ,"AsyncUnordered");
 		obj.put("poolSize" ,4);
 		obj.put("queueSize", 20);
-		System.out.println(obj.toJSONString());
 		try {
 			FileWriter f = new FileWriter(config);
 			f.write(obj.toJSONString());

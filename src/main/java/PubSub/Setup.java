@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -29,12 +30,13 @@ public class Setup<T> {
 	private long sTime, eTime;
 	//getSubscriberList
 	public ArrayList<Subscribers<T>> getSubs() { return subscribers; }
+	public ArrayList<Publisher<T>> getPubs() { return publishers; }
 	
 	/*
 	 * Display count of old, new and equal. Also display count of total items received 
 	 */
 	public HashMap<String, Integer> displayCount() {
-		HashMap<String, Integer> countMap = new HashMap<>();
+		LinkedHashMap<String, Integer> countMap = new LinkedHashMap<>();
 		for(Subscribers<T> sub : subscribers) {
 			countMap.put(sub.getFName() + " Count", sub.getCount1());
 			countMap.put(sub.getFName() + " InvertedIndex", sub.getSize());

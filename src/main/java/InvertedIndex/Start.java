@@ -30,7 +30,7 @@ public class Start {
 			System.out.println("\n~~~~~PROCESSING DONE~~~~~\n");
 			double eTime = System.currentTimeMillis();
 			System.out.printf("Total Processing time : %.2f secs\n.....................\n\n", (eTime-sTime)/1000);
-			queryObj.queryInvertedIndex();
+
 			
 		} catch (IOException e1) {
 			e1.printStackTrace();

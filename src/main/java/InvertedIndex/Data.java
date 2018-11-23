@@ -16,7 +16,7 @@ public class Data implements Comparable{
 	public int getFrequency() { return frequency; }
 	@Override
 	public String toString() {
-		return data + ", frequency : " + frequency;
+		return data + "\t<td>" + frequency + "</td>";
 	}
 	
 	/*

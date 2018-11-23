@@ -16,8 +16,9 @@ public class AmazonQA extends Data{
 	
 	@Override
 	public String toString() {
-		//return "reviewID : " + reviewerID + "\tunixReviewTime : " + unixReviewTime;
-		return "questionType : " + questionType + ",asin : " + asin + ",answerTime : " + answerTime + ",unixTime : " + unixTime + ",question : " + question + ",answerType : " + answerType + ",answer : " + answer;
+		//return "ASIN: <td>" + asin + "</td>\tQUESTION : <td>" + question + "</td>\tANSWER : <td>" + answer + "</td>"; 
+		return "<td>" + asin + "</td>\t<td>" + question + "</td>\t<td>" + answer + "</td>"; 
+		//return "ASIN: " + asin + "\tQUESTION : " + question + "\tANSWER : " + answer; 
 	}
 	
 	public String getQuestion() { return question; }

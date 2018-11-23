@@ -17,8 +17,9 @@ public class AmazonReview extends Data{
 		
 		@Override
 		public String toString() {
-			//return "reviewID : " + reviewerID + "\tunixReviewTime : " + unixReviewTime;
-			return "reviewerID : " + reviewerID + ",asin : " + asin + ",reviewerName : " + reviewerName + ",helpful : " + helpful + ",reviewText : " + reviewText + ",overall : " + overall + ",summary : " + summary + ",unixReviewTime : " + unixReviewTime + ",reviewTime : " + reviewTime;
+			//return "ASIN : <td>" + asin + "</td>\tREVIEWER ID : <td>" + reviewerID + "</td>\tTEXT : <td>" + reviewText + "</td>\tSCORE : <td>" + overall + "</td>"; 
+			return "<td>" + asin + "</td>\t<td>" + reviewerID + "</td>\t<td>" + reviewText + "</td>\t<td>" + overall + "</td>"; 
+			//return "ASIN : " + asin + "\tREVIEWER ID : " + reviewerID + "\tTEXT : " + reviewText + "\tSCORE : " + overall; 
 		}
 		
 		public Double getUnixReviewTime() { return unixReviewTime; }
