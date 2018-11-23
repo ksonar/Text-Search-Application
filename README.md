@@ -1,29 +1,27 @@
 # Powerful Inverted Index
 
 ## Idea
-Build a well-designed generic Inverted Index web application for fast text search with added functionality. Process and display stats for user input, find multiple words with conditions, find proximity of 2 words in a text. Maybe also try to detect spam/similar content.
+Build a well-designed Inverted Index web application for fast text search. Process and display data from APIs, find single/multiple words with conditions, find proximity of 2 words in a text. Maybe also try to detect spam/similar content.
 
 ## Design
-For every dataset loaded, maintain three data structures for the Inverted Index. One mapping term to document objects. Other mapping term to (frequency OR distribution) of document objects. This way we can save time and memory for processing requests (by looking at the latter data structure)s and retrieve results faster.
-Use a Pub-Sub AsyncUordered model to compute the three tables, as a dataset may contain multiple files to process. 
-I will first build this core and then work on APIs. Using Amazon dataset.
+At the core, all user fed input files are sent to a PubSub model with each Susbcriber end processing a unique InvetredIndex. 
+Each of the 3 APIs will be querying data from a static object containing the list of InvertedIndices.
+InvertedIndex -> PubSub -> QueryObj -> APIs -> User
 
 ## APIs
-*	/STATS
-    *	Most/least frequent terms (from corpus or a specific review)
+*  /InvetredIndexAPI
+    * Build the core from user chosen files. Show processing time and what is built.
+    * Direct to Stats, SimpleQuery, ComplexQuery
+*	/InvetredIndexAPI/Stats
+    *	Most/least frequent terms
     *	Most/least distributed term from corpus
     *	Can add more…
-*	/FIND
-    *	Single word
+*	/InvetredIndexAPI/SimpleQuery
+    *	Single word, get results with keyword highlighted.
+*  /InvetredIndexAPI/ComplexQuery
     *	Multiple words with following:
-          *	In order
+          *	Regex for whether to split user input into multiple words or match in entirety
           *	Any order
           *	Proximity between them
 *	/SPAM
     *	If I have time, use the Inverted Index to pull out spam/similar text
-
-## TIMELINE
-*	Inverted Index : 15hrs (starting from scratch to build a generic model)
-*	/STATS & /FIND APIs: 10hrs
-*	Server, web application, JavaScript : 25hrs
-*	Testing on small and big datasets: 5hrs
