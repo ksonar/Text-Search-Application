@@ -1,7 +1,7 @@
-# Powerful Inverted Index
+# Powerful Text Search Application 
 
 ## Idea
-Build a well-designed Inverted Index web application for fast text search. Process and display data from APIs, find single/multiple words with conditions, find proximity of 2 words in a text. Maybe also try to detect spam/similar content.
+Build a well-designed Inverted Index web application for fast text search. Process and display data from APIs, find single/multiple words with conditions.
 
 ## Design
 At the core, all user fed input files are sent to a PubSub model with each Susbcriber end processing a unique InvetredIndex. 
@@ -23,5 +23,6 @@ InvertedIndex -> PubSub -> QueryObj -> APIs -> User
           *	Regex for whether to split user input into multiple words or match in entirety
           *	Any order
           *	Proximity between them
-*	/SPAM
-    *	If I have time, use the Inverted Index to pull out spam/similar text
+## Future Work
+* Find records with a word-to-word proximity parameter.
+* Use the Inverted Index to pull out spam/similar text
