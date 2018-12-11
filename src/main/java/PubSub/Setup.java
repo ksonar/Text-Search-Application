@@ -28,6 +28,7 @@ public class Setup<T> {
 	private ArrayList<Thread> publisherThreads = new ArrayList<>();
 	private Thread brokerThread = new Thread();
 	private long sTime, eTime;
+	private String root = "Data/";
 	//getSubscriberList
 	public ArrayList<Subscribers<T>> getSubs() { return subscribers; }
 	public ArrayList<Publisher<T>> getPubs() { return publishers; }
@@ -38,8 +39,8 @@ public class Setup<T> {
 	public HashMap<String, Integer> displayCount() {
 		LinkedHashMap<String, Integer> countMap = new LinkedHashMap<>();
 		for(Subscribers<T> sub : subscribers) {
-			countMap.put(sub.getFName() + " Count", sub.getCount1());
-			countMap.put(sub.getFName() + " InvertedIndex", sub.getSize());
+			countMap.put(sub.getFName() + " Object Count", sub.getCount1());
+			countMap.put(sub.getFName() + " InvertedIndex KeySet", sub.getSize());
 		}
 		return countMap;
 	}
@@ -126,7 +127,7 @@ public class Setup<T> {
 			}
 		}
 		broker.shutdown();
-		System.out.println("SHUTDOWN EXEC TIME : "+ (eTime-sTime)/1000.0);
+		LogData.log.info("SHUTDOWN EXEC TIME : "+ (eTime-sTime)/1000.0);
 		if((configData.type().equals("AsyncOrdered"))) {
 			try {
 				brokerThread.join();
@@ -167,7 +168,7 @@ public class Setup<T> {
 	 */
 	public void setPub() {
 		for(int i = 0; i < configData.pubs().size(); i++) {
-			String pubFile = configData.pubs().get(i);
+			String pubFile = root + configData.pubs().get(i);
 			String pubType = configData.getPubTypes().get(i);
 			LogData.log.info("PUB FILE : " + pubFile + " TYPE : " + pubType);
 			publishers.add(new Publisher<T>(pubFile, pubType, broker));

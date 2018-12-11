@@ -8,7 +8,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import InvertedIndex.LogData;
-
+/*
+ * @author ksonar
+ * Get the landing/welcome page
+ */
 public class LandingPage extends HttpServlet {
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {

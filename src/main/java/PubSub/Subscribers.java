@@ -73,7 +73,6 @@ public class Subscribers<T> implements Subscriber<T> {
 	 */
 	@Override
 	public synchronized void onEvent(T item) {
-		//jsonData = (Data) item;
 		if(item.getClass().equals(type.getClass())) {
 			
 			if(fName.equals("AmazonReview")) {
@@ -83,13 +82,6 @@ public class Subscribers<T> implements Subscriber<T> {
 				jsonData = (AmazonQA) item;
 			}
 			
-			/*
-			try {
-				write.write(jsonData.toString());
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}*/
 			invertedIndex.addData(jsonData);
 
 			count1++;			

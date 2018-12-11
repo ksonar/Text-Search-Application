@@ -42,7 +42,7 @@ public class Publisher<T> implements Runnable {
 		int count = 0;
 		long sTime = System.currentTimeMillis();
 		try (BufferedReader f = Files.newBufferedReader(Paths.get(fName), StandardCharsets.ISO_8859_1)) {
-			while((line = f.readLine()) != null && count < 1000) {
+			while((line = f.readLine()) != null && count < 10000) {
 				if(type.equals("AmazonReview")) {
 					item = (T) gson.fromJson(line,AmazonReview.class);
 				}

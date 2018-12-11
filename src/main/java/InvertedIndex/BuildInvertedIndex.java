@@ -5,8 +5,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import PubSub.Setup;
-import PubSub.Subscribers;
-
+/*
+ * Starts the PubSub model and builds a unique Inverted Index at each Subscriber end.
+ * Creates a QueryObject that can be used statically by all APIs to process queries
+ * @author ksonar
+ */
 public class BuildInvertedIndex {
 	public static QueryInvertedIndex queryObj;
 	private Setup<Data> setup;
@@ -33,7 +36,6 @@ public class BuildInvertedIndex {
 			double eTime = System.currentTimeMillis();
 			time = (eTime-sTime)/1000;
 			LogData.log.info("BUILT : " + time + "secs");
-			//queryObj.queryInvertedIndex();
 			
 		} catch (IOException e1) {
 			LogData.log.warning("UNABLE TO BUILD INVERTED INDEX, IO EXCEPTION");

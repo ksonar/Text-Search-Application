@@ -1,17 +1,19 @@
 package InvertedIndex;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Scanner;
+
 
 /*
  * @author ksonar
- * Get query results from list of InvertedIndices
+ * Get query results from list of InvertedIndexes
+ * Acts as an inner interface between front end and back end
  */
 public class QueryInvertedIndex {
 	public static HashMap<String, InvertedIndex> list = new HashMap<>();
 	public QueryInvertedIndex(HashMap<String, InvertedIndex> list) {
-		this.list = list;
+		QueryInvertedIndex.list = list;
 		for(Map.Entry<String, InvertedIndex> item : list.entrySet()) {
 			item.getValue().sortWordIndex();
 		}
@@ -19,12 +21,11 @@ public class QueryInvertedIndex {
 	
 	public String queryInvertedIndex(String query, String param) {
 		String data = "";
-		InvertedIndex index;
 
-		if( query.equals("reviewsearch") && (list.get("AmazonReview") != null)) {
+		if( query.equals("AmazonReviewreviewsearch")) {
 			data += list.get("AmazonReview").search(param); 
 		}
-		else if( query.equals("qasearch") && (list.get("AmazonQA") != null)) {
+		else if( query.equals("AmazonQAqasearch")) {
 			data += list.get("AmazonQA").search(param); 
 		}
 		else if(query.equals("AmazonReviewFrequencyD")) {
@@ -45,9 +46,26 @@ public class QueryInvertedIndex {
 		else if( query.equals("AmazonQADistributionD")) {
 			data += list.get("AmazonQA").getDistribution(Integer.parseInt(param), "descending"); 
 		}
-		else {
-			data += "-10";
+		else if (query.contains("Complex")) {
+			String[] params = param.split("/");
+			if(params.length != 3) {
+				data += "-1";
+			}
+			else
+			{	
+				LinkedHashMap<String, String> paramData = new LinkedHashMap<>();
+				paramData.put("0" , params[0]);
+				paramData.put("1" ,params[2]);
+				String relation = params[1];
+				if (query.equals("AmazonReviewComplexR")) {
+					data += list.get("AmazonReview").getComplex(paramData, relation);
+				}
+				else if (query.equals("AmazonQAComplexQ")){ 
+					data += list.get("AmazonQA").getComplex(paramData, relation);
+				}
+			}
 		}
+		if(data.equals("")) { data = "-10"; }
 		return data;
 	}
 
